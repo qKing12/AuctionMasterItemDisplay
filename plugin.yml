@@ -1,0 +1,13 @@
+name: AuctionMasterItemDisplay
+author: qKing12
+version: "2.0-BETA"
+main: me.qKing12.AuctionMasterItemDisplay.AuctionMasterItemDisplay
+description: AuctionMaster Addon
+depend: [AuctionMaster]
+softdepend: [AuctionMaster]
+api-version: 1.13
+
+commands:
+  auctionhousedisplay:
+    aliases: [ahdisplay, ahd, ahoused, ahousedisplay, auctionhoused, auctiond, auctiondisplay]
+    description: AuctionMasterItemDisplay Command

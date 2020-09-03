@@ -1,0 +1,36 @@
+title-line-1: '&e#%top-position% &f%auction-name%'
+title-line-2: '&7by %seller-display-name%'
+
+display-use-permission: 'auctionmaster.display'
+no-permission-message: '&cYou don''t have permission to use this.'
+
+no-auction-display-click-message:
+  - '&cHmm... there''s nothing here.'
+  - '&cIt seems you are looking at an empty display.'
+
+#The sign is pretty limited you can
+#use %position% for auction position
+#use %coins% for auction coins
+#use %bids% for the number of bids
+sign-line-1: '&0#%position% Auction'
+sign-line-2: '&6&l%coins% coins'
+sign-line-3: '&2%bids% bids'
+sign-line-4: '&3&l[CLICK GLASS]'
+
+#The units displayed on the sign
+#you can put more than one letter but
+#keep in mind that it has to
+#have enough space on a row
+units:
+  #Unit for 1.000
+  first-unit: 'K'
+  #Unit for 1.000.000
+  second-unit: 'M'
+  #Unit for 1.000.000.000
+  third-unit: 'G'
+  #Unit for 1.000.000.000.000
+  forth-unit: 'T'
+  #If you need more units you are crazy
+
+#Please do not modify
+version: 1.0

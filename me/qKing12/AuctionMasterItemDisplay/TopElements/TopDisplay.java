@@ -1,5 +1,6 @@
 package me.qKing12.AuctionMasterItemDisplay.TopElements;
 
+import me.qKing12.AuctionMaster.AuctionMaster;
 import me.qKing12.AuctionMaster.AuctionObjects.Auction;
 import me.qKing12.AuctionMaster.Menus.ViewAuctionMenu;
 import me.qKing12.AuctionMasterItemDisplay.Database;
@@ -98,8 +99,10 @@ public class TopDisplay implements Listener {
                 if(auction!=null)
                     setItem(auction.getItemStack());
             }
-            if(utils.getArmorStandDown(location)==null)
-                placeDisplay();
+            Bukkit.getScheduler().runTask(AuctionMasterItemDisplay.plugin, () -> {
+                if (utils.getArmorStandDown(location) == null)
+                    placeDisplay();
+            });
         }, 20, 40);
     }
 
@@ -162,12 +165,21 @@ public class TopDisplay implements Listener {
                 try {
                     if (auction == null || auction.getId() == null || !auction.getId().equalsIgnoreCase(TopHolder.auctionsList.getAuction(position).getId())) {
                         auction = TopHolder.auctionsList.getAuction(position);
-                        bidCache = auction.getBids().getNumberOfBids();
-                        placeDisplay();
-                        findSigns();
+                        try {
+                            bidCache = auction.getBids().getNumberOfBids();
+                            placeDisplay();
+                            findSigns();
+                        }catch(NullPointerException x){
+                            TopHolder.globalAuctions.remove(auction);
+                            auction=null;
+                            clearDisplay();
+                            bidCache=-1;
+                        }
                     } else if (auction.isEnded()) {
                         TopHolder.removeAuctionFromList(auction);
                         auction = null;
+                        clearDisplay();
+                        bidCache=-1;
                     } else if (auction.getBids().getNumberOfBids() != bidCache) {
                         bidCache++;
                         placeDisplay();
@@ -226,16 +238,16 @@ public class TopDisplay implements Listener {
         isCleared=true;
         if(this.item!=null)
             this.item.remove();
-        ArmorStand amDownTest=utils.getArmorStandDown(location);
-        if(amDownTest!=null){
-            ArmorStand amUp; amUp=utils.getArmorStandUp(location);
-            amDownTest.setCustomNameVisible(false);
-            if(amUp!=null) {
-                amUp.setCustomNameVisible(false);
-            }
-        }
-        else{
-            Bukkit.getScheduler().runTask(AuctionMasterItemDisplay.plugin, () -> {
+        Bukkit.getScheduler().runTask(AuctionMasterItemDisplay.plugin, () -> {
+            ArmorStand amDownTest = utils.getArmorStandDown(location);
+            if (amDownTest != null) {
+                ArmorStand amUp;
+                amUp = utils.getArmorStandUp(location.clone().add(0, 0.4, 0));
+                amDownTest.setCustomNameVisible(false);
+                if (amUp != null) {
+                    amUp.setCustomNameVisible(false);
+                }
+            } else {
                 ArmorStand amDown = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
                 amDown.setHelmet(AuctionMasterItemDisplay.items.glass.clone());
                 amDown.setVisible(false);
@@ -252,8 +264,8 @@ public class TopDisplay implements Listener {
                 amUp.setArms(true);
                 amUp.setRightArmPose(AuctionMasterItemDisplay.verify);
                 amUp.setBasePlate(false);
-            });
-        }
+            }
+        });
     }
 
     private void placeDisplay(){
@@ -263,8 +275,8 @@ public class TopDisplay implements Listener {
         }
         isDespawned=false;
         setItem(auction.getItemStack());
+        isCleared=false;
         Bukkit.getScheduler().runTask(AuctionMasterItemDisplay.plugin, () -> {
-            isCleared = false;
             ArmorStand amDownTest = utils.getArmorStandDown(location);
             if (amDownTest != null) {
                 ArmorStand amUp = utils.getArmorStandUp(location.clone().add(0, 0.4, 0));
@@ -275,7 +287,6 @@ public class TopDisplay implements Listener {
                     amUp.setCustomNameVisible(true);
                 }
             } else {
-                Bukkit.getScheduler().runTask(AuctionMasterItemDisplay.plugin, () -> {
                     ArmorStand amDown = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
                     amDown.setHelmet(AuctionMasterItemDisplay.items.glass.clone());
                     amDown.setVisible(false);
@@ -296,7 +307,6 @@ public class TopDisplay implements Listener {
                     amUp.setBasePlate(false);
                     amUp.setCustomName(utils.chat(AuctionMasterItemDisplay.plugin.getConfig().getString("title-line-1")).replace("%top-position%", String.valueOf(this.position + 1)).replace("%auction-name%", auction.getDisplayName()).replace("%seller-display-name%", auction.getSellerDisplayName()));
                     amUp.setCustomNameVisible(true);
-                });
             }
         });
     }

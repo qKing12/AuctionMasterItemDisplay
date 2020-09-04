@@ -42,7 +42,7 @@ public class TopHolder {
 
     public static TopDisplay getTopDisplay(Location loc){
         for(TopDisplay display : top)
-            if(utils.isLoadedChunk(display.getLocation()) && display.getLocation().equals(loc))
+            if(utils.isLoadedChunk(display.getLocation()) && (display.getLocation().equals(loc) || display.getLocation().clone().add(0,0.4,0).equals(loc)))
                 return display;
             return null;
     }

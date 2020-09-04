@@ -95,7 +95,7 @@ public class Events implements Listener {
     @EventHandler
     public void onBidCreate(PlaceBidEvent e){
         if(AuctionMaster.auctionsHandler.global==null)
-            TopHolder.globalAuctions.sort(Collections.reverseOrder(Comparator.comparing(Auction::getCoins)));
+            Bukkit.getScheduler().runTaskLaterAsynchronously(AuctionMasterItemDisplay.plugin, () -> TopHolder.globalAuctions.sort(Collections.reverseOrder(Comparator.comparing(Auction::getCoins))), 5);
     }
 
     @EventHandler

@@ -4,6 +4,11 @@ import me.qKing12.AuctionMasterItemDisplay.NMS.Items;
 import me.qKing12.AuctionMasterItemDisplay.TopElements.Events;
 import me.qKing12.AuctionMasterItemDisplay.TopElements.TopDisplay;
 import me.qKing12.AuctionMasterItemDisplay.TopElements.TopHolder;
+import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.EulerAngle;
 
@@ -21,6 +26,18 @@ public class AuctionMasterItemDisplay extends JavaPlugin {
         return true;
     }
 
+    private class registerDisplays implements Listener {
+        @EventHandler
+        public void onJoin(PlayerJoinEvent e){
+            try {
+                Database.loadFromFile(AuctionMasterItemDisplay.plugin);
+            } catch (Exception x) {
+                x.printStackTrace();
+            }
+            HandlerList.unregisterAll(this);
+        }
+    }
+
     @Override
     public void onEnable() {
         this.plugin = this;
@@ -32,11 +49,7 @@ public class AuctionMasterItemDisplay extends JavaPlugin {
         new Heads();
         new Commands(this);
         new TopHolder();
-        try {
-            Database.loadFromFile(AuctionMasterItemDisplay.plugin);
-        } catch (Exception x) {
-            x.printStackTrace();
-        }
+        Bukkit.getPluginManager().registerEvents(new registerDisplays(), this);
     }
 
     @Override

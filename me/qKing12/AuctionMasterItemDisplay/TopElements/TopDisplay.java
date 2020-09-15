@@ -14,6 +14,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -60,6 +61,7 @@ public class TopDisplay implements Listener {
                 else {
                     this.item = this.location.getWorld().dropItemNaturally(this.location.clone().add(0, 1.6, 0), toSet);
                     this.item.setVelocity(new Vector(0, 0, 0));
+                    this.item.setPickupDelay(999999999);
                     this.item.teleport(this.location.clone().add(0, 1.6, 0));
                 }
             } else
@@ -83,7 +85,7 @@ public class TopDisplay implements Listener {
         return null;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onPickUp(PlayerPickupItemEvent e){
         if(item==null || item.isDead())
             return;

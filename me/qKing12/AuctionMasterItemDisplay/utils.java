@@ -18,6 +18,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
@@ -201,6 +202,6 @@ public class utils {
         double truncated = value / (divideBy / 10); //the number part of the output times 10
         //boolean hasDecimal = truncated < 100 && (truncated / 10d) != (truncated / 10);
         //return hasDecimal ? (truncated / 10d) + suffix : (truncated / 10) + suffix;
-        return Double.toString(Math.floor(truncated / 10)).replace(".0", "")+suffix;
+        return new DecimalFormat("#.0").format(truncated/10).replace(".0", "")+suffix;
     }
 }

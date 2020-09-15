@@ -59,8 +59,10 @@ public class Commands implements CommandExecutor, Listener {
                         }catch(Exception x){
                             if(args[1].equalsIgnoreCase("removal"))
                                 p.getInventory().addItem(Heads.removalItem.clone());
-                            else
+                            else {
+                                x.printStackTrace();
                                 p.sendMessage(utils.chat("&cUsage: /ahdisplay get <position>\n&cExample: /ahdisplay get 1"));
+                            }
                         }
                     }
                     else

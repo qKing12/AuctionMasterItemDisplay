@@ -19,9 +19,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -57,6 +59,17 @@ public class Events implements Listener {
                 Database.saveToFile(plugin);
             }catch(Exception x){
                 x.printStackTrace();
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPickUp(PlayerPickupItemEvent e){
+        if(!e.isCancelled()){
+            ItemStack item = e.getItem().getItemStack();
+            if(item.getItemMeta().hasLore() && item.getItemMeta().getLore().contains("AuctionMasterItemDisplay")){
+                AuctionMasterItemDisplay.plugin.getLogger().info("An display item was picked up. Forcefully removing the item for player "+e.getPlayer().getName());
+                e.getPlayer().getInventory().remove(item);
             }
         }
     }
@@ -100,10 +113,14 @@ public class Events implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e){
-        if(Bukkit.getOnlinePlayers().size()==1) {
-            for (TopDisplay display : TopHolder.top) {
-                display.checkStatusAuction();
+        try {
+            if (Bukkit.getOnlinePlayers().size() == 1) {
+                for (TopDisplay display : TopHolder.top) {
+                    display.checkStatusAuction();
+                }
             }
+        }catch(Exception x){
+
         }
     }
 

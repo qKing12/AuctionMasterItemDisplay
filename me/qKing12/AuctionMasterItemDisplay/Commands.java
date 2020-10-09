@@ -3,9 +3,12 @@ package me.qKing12.AuctionMasterItemDisplay;
 import me.qKing12.AuctionMasterItemDisplay.TopElements.TopDisplay;
 import me.qKing12.AuctionMasterItemDisplay.TopElements.TopHolder;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -68,6 +71,39 @@ public class Commands implements CommandExecutor, Listener {
                     else
                         p.sendMessage(utils.chat("&cUsage: /ahdisplay get <position>\n&cExample: /ahdisplay get 1"));
                 }
+                else if(args[0].equalsIgnoreCase("place")){
+                    try {
+                        Integer position = Integer.parseInt(args[1]);
+                        for (Entity et : p.getWorld().getNearbyEntities(p.getLocation().getBlock().getLocation(), 1, 3, 1))
+                            if (et.getType().equals(EntityType.ARMOR_STAND)) {
+                                p.sendMessage(utils.chat("&cThis location is too close to an armorstand."));
+                                return false;
+                            }
+                        Location loc = p.getLocation().getBlock().getLocation();
+                        loc.add(0.5, -1.35, 0.5);
+                        TopHolder.top.add(new TopDisplay(position-1, loc));
+                        try {
+                            Database.saveToFile(plugin);
+                        } catch (Exception x) {
+                            x.printStackTrace();
+                        }
+                    }catch(Exception x){
+                        p.sendMessage(utils.chat("&cThe display position is invalid (the positions start with 1)"));
+                    }
+                }
+                else if(args[0].equalsIgnoreCase("removeCurrent")){
+                    for (Entity et : p.getWorld().getNearbyEntities(p.getLocation().getBlock().getLocation(), 1, 3, 1))
+                        if (et.getType().equals(EntityType.ARMOR_STAND)) {
+                            TopDisplay display = TopHolder.getTopDisplay(et.getLocation());
+                            if(display!=null){
+                                display.remove();
+                                p.sendMessage(utils.chat("&aDisplay found and removed!"));
+                            }
+                            else
+                                p.sendMessage(utils.chat("&cNo display found."));
+                            return false;
+                        }
+                }
                 else if(args[0].equalsIgnoreCase("removeall")){
                     for(TopDisplay element : TopHolder.top) {
                         element.despawn();
@@ -83,6 +119,8 @@ public class Commands implements CommandExecutor, Listener {
             }
             else{
                 p.sendMessage(utils.chat("&e/ahdisplay get <position> &8- &fGet a top placer tool"));
+                p.sendMessage(utils.chat("&e/ahdisplay place <position> &8 - &fPlaces a display at your feet"));
+                p.sendMessage(utils.chat("&e/ahdisplay removeCurrent &8- &fRemoves display at  your feet"));
                 p.sendMessage(utils.chat("&e/ahdisplay get removal &8- &fGet a removal tool (Click a display with it and will disappear)"));
                 p.sendMessage(utils.chat("&e/ahdisplay removeall &8- &fIf you rage quit using the tools, remove them all"));
                 //p.sendMessage(utils.chat("&e/ahdisplay save &8- &fSaves the current data into the file. (Recommended after you finish working with displays."));

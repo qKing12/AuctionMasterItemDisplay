@@ -49,7 +49,15 @@ public class AuctionMasterItemDisplay extends JavaPlugin {
         new Heads();
         new Commands(this);
         new TopHolder();
-        Bukkit.getPluginManager().registerEvents(new registerDisplays(), this);
+        if(Bukkit.getOnlinePlayers().size()!=0){
+            try {
+                Database.loadFromFile(AuctionMasterItemDisplay.plugin);
+            } catch (Exception x) {
+                x.printStackTrace();
+            }
+        }
+        else
+            Bukkit.getPluginManager().registerEvents(new registerDisplays(), this);
     }
 
     @Override

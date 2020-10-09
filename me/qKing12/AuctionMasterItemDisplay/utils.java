@@ -71,25 +71,33 @@ public class utils {
     }
 
     public static ArmorStand getArmorStandDown(Location loc){
+        ArmorStand amF = null;
         for(Entity ent : loc.getWorld().getNearbyEntities(loc, 1, 1, 1)) {
             if (ent.getType().equals(EntityType.ARMOR_STAND)) {
                 ArmorStand am = (ArmorStand) ent;
                 if(am.getLocation().equals(loc) && AuctionMasterItemDisplay.verifyAngle(am.getLeftArmPose()))
-                    return (ArmorStand) ent;
+                    if(amF==null)
+                        amF=am;
+                    else
+                        am.remove();
             }
         }
-        return null;
+        return amF;
     }
 
     public static ArmorStand getArmorStandUp(Location loc){
+        ArmorStand amF = null;
         for(Entity ent : loc.getWorld().getNearbyEntities(loc, 1, 1, 1)) {
             if (ent.getType().equals(EntityType.ARMOR_STAND)) {
                 ArmorStand am = (ArmorStand) ent;
                 if(am.getLocation().equals(loc) && AuctionMasterItemDisplay.verifyAngle(am.getRightArmPose()))
-                    return (ArmorStand) ent;
+                    if(amF==null)
+                        amF=am;
+                    else
+                        am.remove();
             }
         }
-        return null;
+        return amF;
     }
 
     /*public static Item getItem(Location loc){

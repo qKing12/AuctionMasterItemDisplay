@@ -155,8 +155,16 @@ public class TopDisplay implements Listener {
             for (String line : AuctionMasterItemDisplay.plugin.getConfig().getStringList("no-auction-display-click-message"))
                 player.sendMessage(utils.chat(line));
         }
-        else
-            new ViewAuctionMenu(player, auction, "Close", 0);
+        else {
+            if(auction==null){
+                for (String line : AuctionMasterItemDisplay.plugin.getConfig().getStringList("no-auction-display-click-message"))
+                    player.sendMessage(utils.chat(line));
+                isCleared=true;
+                clearDisplay();
+            }
+            else
+                new ViewAuctionMenu(player, auction, "Close", 0);
+        }
     }
 
     public void checkStatusAuction(){
